@@ -2,16 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/k8sCleanner/cmd"
-	"os"
+	"github.com/k8sCleaner/cmd"
 )
 
 func main() {
-
-	if err := cmd.Execute(); err != nil {
-		os.Exit(1)
-	}
-	os.Exit(0)
+	fmt.Println("starting k8s-cleanner")
+	cmd.Execute()
 }
 
 /*

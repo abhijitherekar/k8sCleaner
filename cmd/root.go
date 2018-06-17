@@ -3,12 +3,15 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
 )
+
+type a pflag.ParseErrorsWhitelist
 
 var rootCmd = &cobra.Command{
 	Use:   "k8swatcher",
