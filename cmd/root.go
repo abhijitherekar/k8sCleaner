@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
 )
@@ -30,15 +32,20 @@ func Execute() {
 */
 
 func run_k8swatcher(cmd *cobra.Command, args []string) {
-	kubeConfigPath = os.Getenv("HOME") + "/.kube/config"
+	var config *rest.Config
+	var err error
+	kubeConfigPath := os.Getenv("HOME") + "/.kube/config"
 
 	if _, err := os.Stat(kubeConfigPath); err == nil {
-		config, err := clientcmd.BuildConfigFromFlags("", *kubeConfigPath)
-		if err != nil {
-			panic(err.Error())
-		}
+		config, err = clientcmd.BuildConfigFromFlags("", kubeConfigPath)
+	} else {
+		config, err = rest.InClusterConfig()
 	}
 
+	if err != nil {
+		fmt.Println("err while building")
+		return
+	}
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
