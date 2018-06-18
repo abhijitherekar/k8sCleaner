@@ -1,0 +1,7 @@
+FROM alpine:3.4
+
+RUN apk add --update ca-certificates
+
+COPY k8sCleaner /bin/k8sCleaner
+
+ENTRYPOINT ["/bin/k8sCleaner"]
