@@ -2,16 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/k8sCleaner/controller"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	//metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
 )
-
-type a pflag.ParseErrorsWhitelist
 
 var rootCmd = &cobra.Command{
 	Use:   "k8swatcher",
@@ -49,16 +47,19 @@ func run_k8swatcher(cmd *cobra.Command, args []string) {
 		fmt.Println("err while building")
 		return
 	}
+	fmt.Println("config: ", config)
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
 	}
-	for {
-		pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{})
-		if err != nil {
-			panic(err.Error())
+	controller.Start(clientset, config)
+	/*	for {
+			pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{})
+			if err != nil {
+				panic(err.Error())
+			}
+			fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))
 		}
-		fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))
-	}
-
+	*/
+	select {}
 }
